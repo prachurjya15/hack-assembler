@@ -1,5 +1,7 @@
 #include "parser.h"
 
+#include "../utils/utils.h"
+
 
 const char i_Ainstruction = '@';
 const char i_Linstruction = '(';
@@ -7,8 +9,6 @@ const char i_Linstruction = '(';
 Parser::Parser(string filename): m_filename(filename){
     // Open the file and store in a member variable.
     m_fileReaderPtr.open(filename);
-    cout << "Here" << endl;
-    cout<< "END" << endl;
 }
 
 bool Parser::hasMoreLines() {
@@ -16,10 +16,29 @@ bool Parser::hasMoreLines() {
     return !m_fileReaderPtr.eof();
 }
 
+bool Parser::checkValidInstruction(string instruction) {
+    // If WhiteSpace return false;
+    if (instruction.length() == 0) {
+        return false;
+    }
+    // if starts with // return false;
+    for(int i=0;i<instruction.length();i++) {
+        if(instruction[i] && instruction[i]!= '/') {
+             return true;
+        } 
+    }
+    return false;
+}
+
 string Parser::getNextInstruction() {
     // cout << "getNextInstruction" << '\n';
     string nextInstruction;
-    getline(m_fileReaderPtr, nextInstruction);
+    bool isValidInstruction = false;
+    // while(!isValidInstruction) {
+        getline(m_fileReaderPtr, nextInstruction);
+        isValidInstruction = checkValidInstruction(nextInstruction);
+    // }
+   
     m_currInstruction = nextInstruction;
     this->instructionType();
     return nextInstruction;
@@ -46,10 +65,10 @@ string Parser::symbol() {
     switch (m_currInstructionType)
     {
     case INSTRUCTION_TYPE::A_INSTRUCTION:
-        return m_currInstruction.substr(1);
+        return  Utils::RemoveWhitespaces(m_currInstruction.substr(1));
         break;
     case INSTRUCTION_TYPE::L_INSTRUCTION:
-        return m_currInstruction.substr(1, m_currInstruction.length()-2);
+        return Utils::RemoveWhitespaces(m_currInstruction.substr(1, m_currInstruction.length()-2));
         break;
     default:
         return "";
@@ -59,24 +78,25 @@ string Parser::symbol() {
 
 string Parser::dest() {
     int equalPos = m_currInstruction.find("=");
-    return m_currInstruction.substr(0, equalPos);
+    return m_currInstruction.substr(0, equalPos).length() > 0 ? Utils::RemoveWhitespaces(m_currInstruction.substr(0, equalPos)) : "null";
 }
 
 string Parser::comp() {
     int equalPos = m_currInstruction.find("=");
     int semiColonPos = m_currInstruction.find(";");
     if ( semiColonPos == string::npos && equalPos >= 0) {
-        return m_currInstruction.substr(equalPos+1);
+        return m_currInstruction.substr(equalPos+1).length() > 0 ? Utils::RemoveWhitespaces(m_currInstruction.substr(equalPos+1)) :"null";
     }
-    return m_currInstruction.substr(equalPos+1, semiColonPos - equalPos - 1);
+    return m_currInstruction.substr(equalPos+1, semiColonPos - equalPos - 1).length()> 0 ? Utils::RemoveWhitespaces(m_currInstruction.substr(equalPos+1, semiColonPos - equalPos - 1)) : "null" ;
 }
 
 string Parser::jump() {
+    // TODO : Handle Comments
     int semiColonPos = m_currInstruction.find(";");
     if ( semiColonPos == string::npos) {
         return "null";
     }
-    return m_currInstruction.substr(semiColonPos+1);
+    return Utils::RemoveWhitespaces(m_currInstruction.substr(semiColonPos+1));
 }
 
 // Test code

@@ -10,6 +10,7 @@ using namespace std;
 
 class GenCode {
     public:
+        GenCode();
         string Dest(string instruction);
         string Comp(string instruction);
         string Jump(string instruction);

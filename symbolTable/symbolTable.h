@@ -9,11 +9,12 @@ using namespace std;
 
 class SymbolTable{
     public:
-        void AddEntry(string symbol, string address);
+        SymbolTable();
+        void AddEntry(string symbol, int address);
         bool Contains(string symbol);
         int  GetAddress(string symbol);
     private:
-        unordered_map<string, string> m_symbolMap;
+        unordered_map<string, int> m_symbolMap;
 };
 
 #endif

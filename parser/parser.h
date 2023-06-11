@@ -29,7 +29,8 @@ class Parser {
         string m_filename;
         fstream m_fileReaderPtr; 
         string m_currInstruction;
-        INSTRUCTION_TYPE m_currInstructionType;       
+        INSTRUCTION_TYPE m_currInstructionType;
+        bool checkValidInstruction(string instruction);       
 };
 
 #endif

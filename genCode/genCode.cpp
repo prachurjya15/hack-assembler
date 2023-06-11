@@ -7,8 +7,8 @@ GenCode::GenCode(){
     this->fillJumpMap();
 }
 
-void GenCode::fillDestMap(){
-    m_destMap = {
+void GenCode::fillJumpMap(){
+    m_jumpMap = {
         {   "null"  ,   "000"},
         {   "JGT"   ,   "001"}, 
         {   "JEQ"   ,   "010"}, 
@@ -20,8 +20,8 @@ void GenCode::fillDestMap(){
        };
 }
 
-void GenCode::fillJumpMap(){
-    m_jumpMap = {
+void GenCode::fillDestMap(){
+    m_destMap = {
         {   "null"  ,   "000"},
         {   "M"   ,   "001"}, 
         {   "D"   ,   "010"}, 
@@ -74,5 +74,6 @@ string GenCode::Jump(string instruction){
 }
 
 string GenCode::Comp(string instruction) {
+   // cout<< instruction << "  "<< instruction.length() << "  "<< m_compMap[instruction]<< '\n';
     return m_compMap[instruction];
 }
